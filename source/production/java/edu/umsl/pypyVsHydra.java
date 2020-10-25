@@ -1,4 +1,5 @@
 package edu.umsl;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class pypyVsHydra {
@@ -13,16 +14,42 @@ public class pypyVsHydra {
 
     public static void gameplay() {
         Scanner scanner = new Scanner(System.in);
-        int heads, tails, choice;
+        int heads = -1,
+            tails = -1,
+            choice;
 
         //Here comes the Hydra!
-        System.out.println("PyPy can see the hydra now. How many heads can PyPy see?");
-        heads = scanner.nextInt();
-        System.out.println("PyPy can see its tails, now. How many tails are there?");
-        tails = scanner.nextInt();
-        Hydra hydra = new Hydra(heads, tails);
+        try {
+            System.out.println("PyPy can see the hydra now. How many heads can PyPy see?");
+            heads = scanner.nextInt();
 
-        hydra.displayCounts();
+            while (heads < 0) {
+                System.out.println("Invalid input. Please enter only a positive integer.");
+                System.out.println("PyPy can see the hydra now. How many heads can PyPy see?");
+                heads = scanner.nextInt();
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Let's try again. Please enter only a positive integer");
+            System.out.println();
+            gameplay();
+        }
+
+        try {
+            System.out.println("PyPy can see its tails, now. How many tails are there?");
+            tails = scanner.nextInt();
+
+            while (tails < 0) {
+                System.out.println("Invalid input. Please enter only a positive integer.");
+                System.out.println("PyPy can see its tails, now. How many tails are there?");
+                tails = scanner.nextInt();
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Let's try again. Please enter only a positive integer");
+            System.out.println();
+            gameplay();
+        }
+            Hydra hydra = new Hydra(heads, tails);
+            hydra.displayCounts();
 
         //gameplay goes here, do while with nested switch for move choice
         do {
@@ -127,7 +154,7 @@ public class pypyVsHydra {
         System.out.println("Enter y for yes or any other character to exit:");
         replay = Character.toLowerCase(scanner.next().charAt(0));
 
-        if (replay == 'a'){
+        if (replay == 'y'){
             System.out.println("PyPy feels ready to face the Hydra again...");
             gameplay();
         }

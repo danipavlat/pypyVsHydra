@@ -151,15 +151,20 @@ public class Hydra {
             }
         }
 
-        if (heads >= 3 && (heads % 2 == 1) && tails >= 1){
+        if (heads >= 1 && (heads % 2 == 1) && tails >= 1){
             //if odd number of heads > 1, and at least one tail
+            if (heads == 1) {
+                //move 2 twice add two tails
+                minMovesToWin += 2;
+                tailCount += 2;
+            }
             if (tails == 1) {
                 //need move 2 once to get h:3 t:2 (minMovesToWin = 1)
                 //need move 4 once to get even number of heads, 0 tails (minMovesToWin = 1 + 1)
                 minMovesToWin = 2;
                 headCount = heads + 1; //move 4 adds 1 head
                 //for every 2 heads:
-                    //need move 3 once for h:0 t:0
+                //need move 3 once for h:0 t:0
                 minMovesToWin += (headCount / 2);
             } else { //odd number heads >= 3 , tails > 1)
                 if (tailCount % 2 == 1) {   //if odd number of tails
@@ -185,6 +190,40 @@ public class Hydra {
             }
         }
 
-    }
+        if (heads % 2 == 0) {
+                //if even number of heads
 
-}
+                //move 3 once for every two heads to remove all heads
+                minMovesToWin += (headCount / 2);
+
+                if (tailCount == 1) {
+                    //FIRST needs at least move 2 three times to add three tails
+                    minMovesToWin = 3;
+                    tailCount += 3; //tailCount now == 4, jumps to first second if{} down
+                }
+                if (tailCount % 2 == 1) {
+                    //for every 1 tail when odd number of tails > 1:
+                    //  need move 2 three times
+                    minMovesToWin += 2;
+                    minMovesToWin *= tailCount; // (3 * move 2) * num of tails
+                    tailCount = minMovesToWin + 1;
+
+                } else if (tailCount >= 2) {
+                    //for every 2 tails when even:
+                    //  FIRST needs move 2 twice
+                    minMovesToWin *= 2 * (tailCount / 2); // (2 * move 2) * every 2 tails
+                    tailCount += minMovesToWin;
+                    //continues to the following if statement (now tailCount >= 4)
+                }
+                if (tailCount >= 4 && (tailCount % 4 == 0)) {
+                    //for every 4 tails (or every 4 in new tailCount):
+                    //  needs move 4 twice (minMovesToWin += 2)
+                    minMovesToWin += 2 * (tailCount / 4);
+                    headCount += (tailCount / 2);
+                }
+
+                //move 3 once for every two heads
+                minMovesToWin += (headCount / 2);
+            }
+        }
+    }
